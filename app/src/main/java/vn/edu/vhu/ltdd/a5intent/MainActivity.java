@@ -14,6 +14,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.IntentCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -53,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
                                                 R.string.returned,
                                                 daSua.getHoTen()));
 
-                                Log.d(TAG,
+                                Log.d(
+                                        TAG,
                                         "Nhận kết quả trả về: "
                                                 + daSua.getHoTen());
                             }
@@ -63,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
                             tvKetQuaTraVe.setText(
                                     R.string.returned_cancel);
 
-                            Log.d(TAG,
+                            Log.d(
+                                    TAG,
                                     "Kết quả trả về: RESULT_CANCELED");
                         }
                     });
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     return insets;
                 });
 
+        // Ánh xạ các thành phần giao diện
         edtHoTen = findViewById(R.id.edtHoTen);
         edtDienThoai = findViewById(R.id.edtDienThoai);
         edtEmail = findViewById(R.id.edtEmail);
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnChiaSe =
                 findViewById(R.id.btnChiaSe);
 
+        // Bắt sự kiện các nút
         btnChiTiet.setOnClickListener(
                 v -> moManHinhChiTiet());
 
@@ -126,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 v -> chiaSe());
     }
 
-    // Mở màn hình 2 và gửi dữ liệu
+    // Mở màn hình 2 và truyền Contact
     private void moManHinhChiTiet() {
 
         String hoTen =
@@ -134,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
                         .toString()
                         .trim();
 
+        // Kiểm tra họ tên
         if (hoTen.isEmpty()) {
 
             edtHoTen.setError(
@@ -142,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        // Tạo đối tượng Contact
         Contact contact =
                 new Contact(
                         hoTen,
@@ -152,23 +159,40 @@ public class MainActivity extends AppCompatActivity {
                                 .toString()
                                 .trim());
 
+        // Intent tường minh mở DetailActivity
         Intent intent =
                 new Intent(
                         this,
                         DetailActivity.class);
 
+        // Gửi Contact sang màn hình 2
         intent.putExtra(
                 EXTRA_CONTACT,
                 contact);
 
+        // Gửi thêm thông tin người gửi
         intent.putExtra(
                 EXTRA_NGUOI_GUI,
                 TAG);
 
-        chiTietLauncher.launch(intent);
+        // =========================
+        // NC3 - HIỆU ỨNG CHUYỂN MÀN HÌNH
+        // =========================
+
+        ActivityOptionsCompat options =
+                ActivityOptionsCompat.makeCustomAnimation(
+                        this,
+                        R.anim.slide_in_right,
+                        R.anim.slide_out_left
+                );
+
+        // Mở DetailActivity và áp dụng hiệu ứng
+        chiTietLauncher.launch(
+                intent,
+                options);
     }
 
-    // Mở ứng dụng gọi điện
+    // Intent ngầm định - mở ứng dụng gọi điện
     private void goiDien() {
 
         String sdt =
@@ -192,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         moAnToan(intent);
     }
 
-    // Mở website trường
+    // Intent ngầm định - mở website trường
     private void moTrangWeb() {
 
         Intent intent =
@@ -205,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         moAnToan(intent);
     }
 
-    // Chia sẻ thông tin
+    // Intent ngầm định - chia sẻ thông tin
     private void chiaSe() {
 
         Intent intent =
@@ -232,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                                 R.string.share_title)));
     }
 
-    // Bắt lỗi khi máy không có ứng dụng phù hợp
+    // Xử lý trường hợp không có ứng dụng phù hợp
     private void moAnToan(Intent intent) {
 
         try {
@@ -262,36 +286,54 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "MainActivity - onStart");
+
+        Log.d(
+                TAG,
+                "MainActivity - onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "MainActivity - onResume");
+
+        Log.d(
+                TAG,
+                "MainActivity - onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "MainActivity - onPause");
+
+        Log.d(
+                TAG,
+                "MainActivity - onPause");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "MainActivity - onStop");
+
+        Log.d(
+                TAG,
+                "MainActivity - onStop");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "MainActivity - onRestart");
+
+        Log.d(
+                TAG,
+                "MainActivity - onRestart");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "MainActivity - onDestroy");
+
+        Log.d(
+                TAG,
+                "MainActivity - onDestroy");
     }
 }
