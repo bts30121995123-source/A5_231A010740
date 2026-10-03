@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     return insets;
                 });
 
-        // Ánh xạ các thành phần giao diện
+        // Ánh xạ giao diện
         edtHoTen = findViewById(R.id.edtHoTen);
         edtDienThoai = findViewById(R.id.edtDienThoai);
         edtEmail = findViewById(R.id.edtEmail);
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnChiaSe =
                 findViewById(R.id.btnChiaSe);
 
-        // Bắt sự kiện các nút
+        // Bắt sự kiện
         btnChiTiet.setOnClickListener(
                 v -> moManHinhChiTiet());
 
@@ -129,9 +129,63 @@ public class MainActivity extends AppCompatActivity {
 
         btnChiaSe.setOnClickListener(
                 v -> chiaSe());
+
+        // =========================
+        // NC4 - NHẬN VĂN BẢN CHIA SẺ
+        // =========================
+        xuLyVanBanDuocChiaSe(getIntent());
     }
 
-    // Mở màn hình 2 và truyền Contact
+    // NC4: xử lý trường hợp app đang mở mà nhận Intent mới
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        setIntent(intent);
+        xuLyVanBanDuocChiaSe(intent);
+    }
+
+    // NC4: đọc văn bản được ứng dụng khác chia sẻ
+    private void xuLyVanBanDuocChiaSe(Intent intent) {
+
+        if (intent == null) {
+            return;
+        }
+
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (Intent.ACTION_SEND.equals(action)
+                && "text/plain".equals(type)) {
+
+            String vanBan =
+                    intent.getStringExtra(
+                            Intent.EXTRA_TEXT);
+
+            if (vanBan != null
+                    && !vanBan.trim().isEmpty()) {
+
+                // Hiển thị văn bản nhận được vào ô họ tên
+                edtHoTen.setText(vanBan);
+
+                tvKetQuaTraVe.setText(
+                        "Đã nhận văn bản chia sẻ từ ứng dụng khác");
+
+                Log.d(
+                        TAG,
+                        "NC4 - Nhận văn bản chia sẻ: "
+                                + vanBan);
+
+                Toast.makeText(
+                        this,
+                        "Đã nhận văn bản chia sẻ",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+        }
+    }
+
+    // Mở màn hình 2
     private void moManHinhChiTiet() {
 
         String hoTen =
@@ -139,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
                         .toString()
                         .trim();
 
-        // Kiểm tra họ tên
         if (hoTen.isEmpty()) {
 
             edtHoTen.setError(
@@ -148,7 +201,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Tạo đối tượng Contact
         Contact contact =
                 new Contact(
                         hoTen,
@@ -159,18 +211,15 @@ public class MainActivity extends AppCompatActivity {
                                 .toString()
                                 .trim());
 
-        // Intent tường minh mở DetailActivity
         Intent intent =
                 new Intent(
                         this,
                         DetailActivity.class);
 
-        // Gửi Contact sang màn hình 2
         intent.putExtra(
                 EXTRA_CONTACT,
                 contact);
 
-        // Gửi thêm thông tin người gửi
         intent.putExtra(
                 EXTRA_NGUOI_GUI,
                 TAG);
@@ -178,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
         // =========================
         // NC3 - HIỆU ỨNG CHUYỂN MÀN HÌNH
         // =========================
-
         ActivityOptionsCompat options =
                 ActivityOptionsCompat.makeCustomAnimation(
                         this,
@@ -186,13 +234,12 @@ public class MainActivity extends AppCompatActivity {
                         R.anim.slide_out_left
                 );
 
-        // Mở DetailActivity và áp dụng hiệu ứng
         chiTietLauncher.launch(
                 intent,
                 options);
     }
 
-    // Intent ngầm định - mở ứng dụng gọi điện
+    // Intent ngầm định - gọi điện
     private void goiDien() {
 
         String sdt =
@@ -216,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
         moAnToan(intent);
     }
 
-    // Intent ngầm định - mở website trường
+    // Intent ngầm định - mở website
     private void moTrangWeb() {
 
         Intent intent =
@@ -229,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         moAnToan(intent);
     }
 
-    // Intent ngầm định - chia sẻ thông tin
+    // Intent ngầm định - chia sẻ thông tin ra app khác
     private void chiaSe() {
 
         Intent intent =
@@ -286,54 +333,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        Log.d(
-                TAG,
-                "MainActivity - onStart");
+        Log.d(TAG, "MainActivity - onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        Log.d(
-                TAG,
-                "MainActivity - onResume");
+        Log.d(TAG, "MainActivity - onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        Log.d(
-                TAG,
-                "MainActivity - onPause");
+        Log.d(TAG, "MainActivity - onPause");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        Log.d(
-                TAG,
-                "MainActivity - onStop");
+        Log.d(TAG, "MainActivity - onStop");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-
-        Log.d(
-                TAG,
-                "MainActivity - onRestart");
+        Log.d(TAG, "MainActivity - onRestart");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        Log.d(
-                TAG,
-                "MainActivity - onDestroy");
+        Log.d(TAG, "MainActivity - onDestroy");
     }
 }
